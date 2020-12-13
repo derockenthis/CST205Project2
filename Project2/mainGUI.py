@@ -67,8 +67,11 @@ class mainWindow(QWidget):
 	def imageSelect(self): #function for selecting image
 		self.activeImage=easygui.fileopenbox()
 		pixmap=QPixmap(self.activeImage)
+		self.previewImage=""
+		self.previewImageDisplay.clear()
 		if str(pixmap.size())=="PySide2.QtCore.QSize(0, 0)": #checks if image is valid
 			self.activeImage=""
+			self.activeImageDisplay.clear()
 			self.hedder.setText("Warning: Invalid image.")
 			self.repaint()
 		else: #if image is valid, sets and displays image
@@ -79,7 +82,14 @@ class mainWindow(QWidget):
 			self.repaint()
 
 	def sampleFilter(self): #code to be replaced with filter
-		if self.activeImage!="": #checks if image is ready
+		if self.previewImage!="": #checks if preview exists. If it does, it will be edited instead of original.
+			imPath=self.previewImage
+			pixmap=QPixmap(imPath)
+			pixmap=pixmap.scaled(self.n,self.n,Qt.KeepAspectRatio)
+			self.previewImageDisplay.setPixmap(pixmap)
+			self.hedder.setText("Filter applied. Now, apply additional filters or save.")
+			self.repaint()
+		elif self.activeImage!="": #checks if image is ready
 			self.previewImage=self.activeImage
 			imPath=self.previewImage
 			pixmap=QPixmap(imPath)
