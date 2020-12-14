@@ -92,7 +92,6 @@ class mainWindow(QWidget):
 		if self.previewImage!="": #checks if preview exists. If it does, it will be edited instead of original.
 			self.previewImage=bandwToColor(self.previewImage)
 			imPath=self.previewImage
-			print(imPath)#delete
 			pixmap=QPixmap(imPath)
 			pixmap=pixmap.scaled(self.n,self.n,Qt.KeepAspectRatio)
 			self.previewImageDisplay.setPixmap(pixmap)
