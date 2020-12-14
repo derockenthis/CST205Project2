@@ -4,7 +4,7 @@ from PIL import ImageFilter
 from PIL import ImageEnhance
 
 # Open an already existing image
-imageObject = Image.open("sharper.jpg")
+imageObject = Image.open("bird.jpg")
 imageObject.show()
 
 # Apply sharp filter
@@ -13,4 +13,4 @@ sharpened2 = sharpened1.filter(ImageFilter.SHARPEN)
 
 # Show the sharpened images
 sharpened2.show()
-sharpened2.save("sharper2.jpg")
+sharpened2.save("test.jpg")
