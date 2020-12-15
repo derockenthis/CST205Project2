@@ -1,4 +1,4 @@
-
+# opens an image using pillow and sharpens the image twice. 
 from PIL import Image
 from PIL import ImageFilter
 from PIL import ImageEnhance
