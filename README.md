@@ -1,5 +1,11 @@
 # Photo Restoration Application
+For Cst205
+12/13/2020
+GitHub Repository: https://github.com/derockenthis/CST205Project2
 
+
+# How To Run
+run the main gui.py
 
 
 Coded in Python
@@ -33,5 +39,6 @@ Once all the desired edits have been applied to an image, the image can be saved
 
 ## Credits 
 Code created by Russell De Vera, Derek In, Gabriel Reyes Tejeda, Samuel Sherrill.
+
 
  Black and White to Color filter accessed via [Image Colorization API](https://deepai.org/machine-learning-model/colorizer).
