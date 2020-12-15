@@ -4,6 +4,7 @@ __init__ for mainWindow created by Samuel Sherrill
 Filter functions progreammed by Derek In, Gabriel Reyes Tejeda, Russel De Vera
 mainWindow and filter functions put together by Samuel Sherrill and Derek In
 External API from https://api.deepai.org/api/colorizer. All other external code downloaded in packages.
+https://github.com/derockenthis/CST205Project2/tree/main/Project2
 '''
 
 #imports
