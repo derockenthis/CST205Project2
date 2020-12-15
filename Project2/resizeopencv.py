@@ -1,3 +1,4 @@
+#uses openCv to resize the image based on a percentage. 
 import cv2
  
 img = cv2.imread('Project2/bird.jpg', cv2.IMREAD_UNCHANGED)
