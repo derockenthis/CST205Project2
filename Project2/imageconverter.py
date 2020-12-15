@@ -1,3 +1,4 @@
+#This uses an api from DeepApi to convert the image from color to black and white, it also retrieves the link from the json and downloads the image.
 import requests
 import urllib.request
 
