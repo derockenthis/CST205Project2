@@ -1,7 +1,13 @@
-#Code created by Samuel Sherrill
-#For CST205 project
+'''
+Code created by Samuel Sherrill, Derek In, Gabriel Reyes Tejeda, Russel De Vera
+__init__ for mainWindow created by Samuel Sherrill
+Filter functions progreammed by Derek In, Gabriel Reyes Tejeda, Russel De Vera
+mainWindow and filter functions put together by Samuel Sherrill and Derek In
+External API from https://api.deepai.org/api/colorizer. All other external code downloaded in packages.
+'''
 
 #imports
+#list of external packages that need to be pip installed in README.txt
 import tempfile
 import numpy as np
 import cv2
@@ -15,20 +21,20 @@ from PySide2.QtGui import QImage, QImageReader, QPixmap
 import requests
 import urllib.request
 
-class mainWindow(QWidget):
+class mainWindow(QWidget): #main window of application
 	def __init__(self):
 		super().__init__()
 		
-		self.activeImage=""
-		self.previewImage=""
+		self.activeImage="" #placeholder for 1st image
+		self.previewImage="" #placeholder for 2nd image
 		self.n=400 #Set image display max size
 		
-		#Top Row Setup
+		#Top Row Setup. self.hedder to be used for information updates
 		self.hedder=QLabel("Welcome to the Image Restoration App")
 		
 		#Button Row Setup
-		self.selectButton=QPushButton("Click to select an image.")
-		self.selectButton.clicked.connect(self.imageSelect)
+		self.selectButton=QPushButton("Click to select an image.") #sets up button
+		self.selectButton.clicked.connect(self.imageSelect) #connects button to function
 		self.option1=QPushButton("Black and White to Color")
 		self.option1.clicked.connect(self.bandwToColorFilter)
 		self.option2=QPushButton("Denoise Image")
@@ -37,12 +43,13 @@ class mainWindow(QWidget):
 		self.option3.clicked.connect(self.sharpenFilter)
 		self.option4=QPushButton("Resize Image")
 		self.option4.clicked.connect(self.resizeFilter)
-		self.resizePercent=QLineEdit(self)
+		self.resizePercent=QLineEdit(self) #sets up line edit for size filter
 		self.saveImage=QPushButton("Save Image")
 		self.saveImage.clicked.connect(self.imageSave)
 		self.saveLabel=QLabel("Save name ->")
-		self.saveName=QLineEdit(self)
+		self.saveName=QLineEdit(self) #sets up line edit for save name
 		
+		#put all buttons, etc. into row
 		self.optionsRow=QHBoxLayout()
 		self.optionsRow.addWidget(self.selectButton)
 		self.optionsRow.addWidget(self.option1)
@@ -55,28 +62,28 @@ class mainWindow(QWidget):
 		self.optionsRow.addWidget(self.saveImage)
 		
 		#Image Display Setup
-		self.activeImageDisplay=QLabel()
+		self.activeImageDisplay=QLabel() #labels to be used for image display, starts empty
 		self.previewImageDisplay=QLabel()
 		
-		
+		#put image labels into row
 		self.imageDisplayRow=QHBoxLayout()
 		self.imageDisplayRow.addWidget(self.activeImageDisplay)
 		self.imageDisplayRow.addWidget(self.previewImageDisplay)
 		
-		#Main Layout Setup
+		#Main Layout Setup, puts hedder, options row, and image display row into column
 		self.mainLayout=QVBoxLayout()
 		self.mainLayout.addWidget(self.hedder)
 		self.mainLayout.addLayout(self.optionsRow)
 		self.mainLayout.addLayout(self.imageDisplayRow)
 		
-		self.setLayout(self.mainLayout)
+		self.setLayout(self.mainLayout) #sets layout as app layout
 		
 	def imageSelect(self): #function for selecting image
-		self.activeImage=easygui.fileopenbox()
-		pixmap=QPixmap(self.activeImage)
-		self.previewImage=""
+		self.activeImage=easygui.fileopenbox() #selects image
+		pixmap=QPixmap(self.activeImage) #turns image into pixmap
+		self.previewImage="" #clears preview image
 		self.previewImageDisplay.clear()
-		if str(pixmap.size())=="PySide2.QtCore.QSize(0, 0)": #checks if image is valid
+		if str(pixmap.size())=="PySide2.QtCore.QSize(0, 0)": #checks if image is valid. If not valid:
 			self.activeImage=""
 			self.activeImageDisplay.clear()
 			self.hedder.setText("Warning: Invalid image.")
@@ -90,12 +97,12 @@ class mainWindow(QWidget):
 
 	def bandwToColorFilter(self): #code to run bandwToColor, save and display
 		if self.previewImage!="": #checks if preview exists. If it does, it will be edited instead of original.
-			self.previewImage=bandwToColor(self.previewImage)
+			self.previewImage=bandwToColor(self.previewImage) #runs filter
 			imPath=self.previewImage
-			pixmap=QPixmap(imPath)
-			pixmap=pixmap.scaled(self.n,self.n,Qt.KeepAspectRatio)
-			self.previewImageDisplay.setPixmap(pixmap)
-			self.hedder.setText("Filter applied. Now, apply additional filters or save.")
+			pixmap=QPixmap(imPath) #sets image as pixmap, to be displayed
+			pixmap=pixmap.scaled(self.n,self.n,Qt.KeepAspectRatio) #scales pixmap for display
+			self.previewImageDisplay.setPixmap(pixmap) #displays image
+			self.hedder.setText("Filter applied. Now, apply additional filters or save.") #updates header
 			self.repaint()
 		elif self.activeImage!="": #checks if image is ready
 			self.previewImage=bandwToColor(self.activeImage)
@@ -111,7 +118,7 @@ class mainWindow(QWidget):
 
 	def denoiseFilter(self): #code to run denoise, save and display
 		if self.previewImage!="": #checks if preview exists. If it does, it will be edited instead of original.
-			self.previewImage=denoise(self.previewImage)
+			self.previewImage=denoise(self.previewImage) #runs filter
 			imPath=self.previewImage
 			imPath=self.previewImage
 			pixmap=QPixmap(imPath)
@@ -120,7 +127,7 @@ class mainWindow(QWidget):
 			self.hedder.setText("Filter applied. Now, apply additional filters or save.")
 			self.repaint()
 		elif self.activeImage!="": #checks if image is ready
-			self.previewImage=denoise(self.activeImage)
+			self.previewImage=denoise(self.activeImage) #runs filter
 			imPath=self.previewImage
 			pixmap=QPixmap(imPath)
 			pixmap=pixmap.scaled(self.n,self.n,Qt.KeepAspectRatio)
@@ -133,7 +140,7 @@ class mainWindow(QWidget):
 
 	def sharpenFilter(self): #code to run sharpen, save and display
 		if self.previewImage!="": #checks if preview exists. If it does, it will be edited instead of original.
-			self.previewImage=sharpen(self.previewImage)
+			self.previewImage=sharpen(self.previewImage) #runs filter
 			imPath=self.previewImage
 			imPath=self.previewImage
 			pixmap=QPixmap(imPath)
@@ -210,7 +217,7 @@ def findExtension(fil): #function to return file extension from a file name
 				ext=char+ext
 		return ext
 	else:
-		return ".jpg"
+		return ".jpg" #defaults to .jpg if no extension can be found
 
 #These functions are the filters for the app
 def bandwToColor(filepath): #Function to download color version of black and white input from API
@@ -255,7 +262,7 @@ def sharpen(filepath): #Function to save sharpened version of imput
 	sharpened.save(newpath)
 	return newpath
 
-
+#runs application
 app=QApplication([])
 imageRestoreWindow=mainWindow()
 imageRestoreWindow.show()
